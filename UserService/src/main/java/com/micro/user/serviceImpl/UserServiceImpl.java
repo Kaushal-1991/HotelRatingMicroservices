@@ -21,6 +21,8 @@ import org.springframework.web.client.RestTemplate;
 import com.micro.user.dto.UserRequest;
 import com.micro.user.dto.UserResponse;
 import com.micro.user.exception.ResourceNotFoundException;
+import com.micro.user.externalclient.HotelService;
+import com.micro.user.model.Hotel;
 import com.micro.user.model.Rating;
 import com.micro.user.model.User;
 import com.micro.user.repository.UserRepository;
@@ -36,6 +38,9 @@ public class UserServiceImpl implements UserServie {
 	
 	@Autowired
 	private RestTemplate restTemplate;
+	
+	@Autowired
+	private HotelService hotelService;
 
 	@Override
 	public UserResponse saveUser(UserRequest request) {
@@ -59,7 +64,8 @@ public class UserServiceImpl implements UserServie {
 	public UserResponse getUser(String userId) {
 		User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User Not found with  this id"));
 		
-		ResponseEntity<List<Rating>> response = restTemplate.exchange("http://localhost:8083/api/ratings/user/" + user.getId(),
+		//Get Ratings 
+		ResponseEntity<List<Rating>> response = restTemplate.exchange("http://RATING-SERVICE/api/ratings/user/" + user.getId(),
 				HttpMethod.GET, 
 				null,
 				new ParameterizedTypeReference<List<Rating>> () {});
@@ -67,8 +73,34 @@ public class UserServiceImpl implements UserServie {
 		
 		logger.debug("{} ", ratingList);
 		
+		List<Rating> hotelRating = ratingList.stream().map(rating -> {
+//			ResponseEntity<Map<String, Object>> hotelResponse = restTemplate.exchange("http://HOTEL-SERVCIE/api/hotels/" + rating.getHotelId(),
+//					HttpMethod.GET, 
+//					null,
+//					new ParameterizedTypeReference<Map<String, Object>> () {});
+//			Map<String,Object> responseHotel = hotelResponse.getBody();
+//			
+//			logger.info("Hotel Response is : {} "+responseHotel);
+//			
+//			Hotel hotel = new Hotel();
+//			if(responseHotel != null ) {
+//				hotel.setId((String)responseHotel.get("id"));
+//				hotel.setAbout((String) responseHotel.get("about"));
+//				hotel.setName((String) responseHotel.get("name"));
+//				hotel.setLocation((String) responseHotel.get("location"));
+//			}
+//			
+//			rating.setHotel(hotel);
+			
+			Hotel hotel = hotelService.getHotel(rating.getHotelId());
+			rating.setHotel(hotel);
+
+	        return rating;
+		}).collect(Collectors.toList());
+		
 		UserResponse mapUserToUserDto = mapUserToUserDto(user);
-		mapUserToUserDto.setRatings(ratingList);
+		mapUserToUserDto.setRatings(hotelRating);
+		
 		return mapUserToUserDto;
 	}
 

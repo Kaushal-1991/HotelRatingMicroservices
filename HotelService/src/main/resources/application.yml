@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: Hotel-Service
+    name: HOTEL-SERVCIE
   datasource:
     url: jdbc:mysql://localhost:3306/micro_hotel
     username: root

@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: Rating-Service
+    name: RATING-SERVICE
   datasource:
     url: jdbc:mysql://localhost:3306/micro_rating
     username: root
