@@ -1,4 +1,4 @@
-package com.micro.user.externalclient;
+package com.micro.user.externalservice;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

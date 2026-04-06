@@ -21,7 +21,7 @@ import org.springframework.web.client.RestTemplate;
 import com.micro.user.dto.UserRequest;
 import com.micro.user.dto.UserResponse;
 import com.micro.user.exception.ResourceNotFoundException;
-import com.micro.user.externalclient.HotelService;
+import com.micro.user.externalservice.HotelService;
 import com.micro.user.model.Hotel;
 import com.micro.user.model.Rating;
 import com.micro.user.model.User;
