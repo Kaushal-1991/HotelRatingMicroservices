@@ -11,7 +11,7 @@ spring:
         - id: USER-SERVICE
           uri: http://localhost:8081
           predicates:
-            - Path=/api/users/**
+            - Path=/api/users/**,/api/home/**
 
         - id: RATING-SERVICE
           uri: http://localhost:8083
